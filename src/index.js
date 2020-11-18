@@ -17,11 +17,12 @@ if (minute < 10) minute = "0" + minute;
 let currentTime = document.querySelector(".current-time");
 currentTime.innerHTML = `${day} ${hour}:${minute}`;
 
-function updateValues(event) {
-  let temperature = Math.round(event.data.main.temp);
+function updateValues(value) {
+  event.preventDefault();
+  let temperature = Math.round(value.data.main.temp);
   let newTemp = document.querySelector(".current-temp");
   newTemp.innerHTML = temperature;
-  let high = Math.round(event.data.main.temp_max);
+  let high = Math.round(value.data.main.temp_max);
   let newHigh = document.querySelector(".current-high");
   newHigh.innerHTML = high;
 }
@@ -51,7 +52,7 @@ function updateLocation(current) {
   newHigh.innerHTML = high;
 }
 
-function getLocation(current) {
+function displayCurrent(current) {
   let apiKey = `e57aed5a3752290f9e3c0dd1d0ad914d`;
   let latitude = current.coords.latitude;
   let longitude = current.coords.longitude;
@@ -59,10 +60,12 @@ function getLocation(current) {
   axios.get(apiUrl).then(updateLocation);
 }
 
+function getLocation() {
+  navigator.geolocation.getCurrentPosition(displayCurrent);
+}
+
 let input = document.querySelector(".search-form");
 input.addEventListener("submit", logInput);
 
 let current = document.querySelector(".btn-info");
 current.addEventListener("click", getLocation);
-
-navigator.geolocation.getCurrentPosition(getLocation);
